@@ -1,0 +1,62 @@
+body{
+    background: none repeat scroll 0 0 #eee;
+    color: #3e3333;
+    font-family: fantasy;
+    font-size: 25px;
+    font-weight: 100;
+    margin: 0 auto;
+    width: 960px;
+
+}
+
+input[type=text]{
+    width: 40%;
+    height: 30px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding-left: 5px;
+    border-radius: 5px;
+}
+
+input[type=submit] {
+    width: 10%;
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    padding-left: 5px;
+}
+
+hr{
+    color: #eee;
+}
+footer{
+    background:#fffeee;
+    font-size:12px;
+    text-align:center;
+}
+
+footer a{
+    color:orange;
+    text-decoration:none;
+}
+
+h5{
+    color: red !important;
+}
+
+.submitBtn{
+    padding-top: 10px;
+}
+
+.searchMsg{
+    padding-top: 70px;
+    padding-bottom: 10px;
+}
+
+.helloUser{
+    padding-top: 20px;
+    padding-bottom: 10px;
+}

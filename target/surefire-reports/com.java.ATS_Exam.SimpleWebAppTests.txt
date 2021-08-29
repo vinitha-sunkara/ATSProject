@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.java.ATS_Exam.SimpleWebAppTests
+-------------------------------------------------------------------------------
+Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 25.023 s - in com.java.ATS_Exam.SimpleWebAppTests

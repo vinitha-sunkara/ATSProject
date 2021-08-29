@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html ng-app="SimpleWebApp" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <title>Simple_WebApp_ATS SpA</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+    <script src="js/app/SearchController.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/app/style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script>
+        var app = angular.module('SimpleWebApp', []);
+        app.constant("CONSTANTS", {
+            getCityByName: "/CityList",
+            getAddressJsonByCityName: "/AddressJson",
+            getFullJSONBySearch: "/FullJson"
+        });
+
+        app.controller("MainPageController", function ($scope, $http, CONSTANTS) {
+
+            $scope.Addresses = [];
+
+            //For Faster Performance we call the JSON Function on Loading, Fetches all JSON Records.
+            getFullJSONList();
+
+            //HTTP GET- get all Address JSON List
+            function getFullJSONList() {
+                $scope.spinnerLoading = true;
+                $scope.searchComplete = false;
+                $http({
+                    method: 'GET',
+                    url: CONSTANTS.getFullJSONBySearch
+                }).then(function successCallback(response) {
+                    $scope.Addresses = response.data;
+                    var data = $scope.Addresses;
+                    console.log(data.length);
+
+                    //Conversion of ArrayList<String> Address JSONObjects From Backend to JSON Objects
+                    var jsonData = new Array();
+                    for (var i = 0; i < data.length; i++) {
+                        jsonData.push(JSON.parse(data[i]));
+                        console.log(jsonData[i].address.city);
+                    }
+                    console.log(jsonData);
+
+                    $scope.SearchResults = [];
+                    $scope.SearchResults = jsonData;
+                    $scope.spinnerLoading = false;
+                    $scope.searchComplete = true;
+
+                }, function errorCallback(response) {
+                    console.log(response.statusText);
+                });
+            }
+
+            $scope.getJsonObjBySearchInput = function () {
+                $scope.filterExpr = $scope.searchText;
+            };
+
+
+            //On Enter press - in Search Box Should Perform Search On Records.
+            var input = document.getElementById("inptxt");
+            input.addEventListener("keyup", function (event) {
+                if (event.keyCode === 13) {
+                    event.preventDefault();
+                    document.getElementById("submitbtn").click();
+                }
+            });
+
+        });
+    </script>
+</head>
+<body>
+
+<div align="center" class="helloUser">
+    <h3 th:inline="text">Hello User! Welcome to ATS Search Engine...</h3>
+    <!--<form th:action="@{/logout}" method="post">
+        <input type="submit" class="btn btn-danger" value="Sign Out"/>
+    </form>-->
+</div>
+
+<div id="content" ng-controller="MainPageController">
+
+    <div align="center" class="searchMsg">
+        <h4>
+            Please Search an Element or Record in the Search Box Below:
+        </h4>
+
+        <input class="form-control" type="text" ng-model='searchText' id="inptxt" placeholder="Search a City..." aria-label="Search">
+        <input type="submit" class="btn btn-primary submitBtn" value="Submit" id="submitbtn" ng-click="getJsonObjBySearchInput()"/>
+    </div>
+
+    <div align="center">
+        <div class="spinner" ng-show="spinnerLoading">
+            <img src="https://media.giphy.com/media/jAYUbVXgESSti/giphy.gif"
+                 alt="Loading Search Records,Please Wait..."/>
+        </div>
+    </div>
+
+    <div align="left" >
+        <div ng-show="searchComplete">
+            <h5>Displaying Records Fetched : {{SearchRes.length}} out of Total Records : {{SearchResults.length |
+                number}}</h5>
+        </div>
+
+        <ul ng-repeat="jsonObjs in SearchRes = ( SearchResults | filter:filterExpr)" ng-show="searchComplete">
+            <li>{{jsonObjs}}</li>
+        </ul>
+
+        <div ng-show="searchComplete">
+            <h5>Displaying Records Fetched : {{SearchRes.length}} out of Total Records : {{SearchResults.length |
+                number}}</h5>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
